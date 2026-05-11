@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cream: #FAF6F0;
+  --warm-white: #FFF9F2;
+  --coffee-dark: #2C1810;
+  --coffee-mid: #5C3D2E;
+  --caramel: #C8854A;
+  --gold: #D4A853;
+  --border: #E8D9C8;
+  --shadow-md: 0 8px 32px rgba(44,24,16,0.12);
+  --radius: 14px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #FAF6F0; color: #1E1209; }
+
+.dark body {
+  background: #1a1108;
+  color: #F5ECD7;
+}
+
+.dark .bg-cream { background-color: #1a1108 !important; }
+.dark .bg-warm-white { background-color: #231508 !important; }
+.dark .border-\[\#E8D9C8\] { border-color: #3a2a18 !important; }
+.dark nav { background: rgba(20,12,4,0.95) !important; }
+.dark .text-coffee-dark { color: #F5ECD7 !important; }
+.dark .text-coffee-mid { color: #D4C4A8 !important; }
