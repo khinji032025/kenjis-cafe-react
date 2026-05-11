@@ -1,4 +1,4 @@
-const API_BASE = 'https://akkjgw6e.infinityfree.com/api'
-const IMG_BASE = 'https://akkjgw6e.infinityfree.com/images'
+const API_BASE = 'https://kenjiscafe.infinityfreeapp.com/api'
+const IMG_BASE = 'https://kenjiscafe.infinityfreeapp.com/images'
 
 export { API_BASE, IMG_BASE }
