@@ -15,7 +15,7 @@ export default function Login() {
     setLoading(true)
     setError('')
     try {
-      const res = await axios.post(`${API_BASE}/login.php`, { username, password })
+      const res = await axios.post(`${API_BASE}/login`, { username, password })
       if (res.data.success) {
         localStorage.setItem('cafe_user', JSON.stringify(res.data.user))
         if (res.data.user.role === 'admin') navigate('/admin')

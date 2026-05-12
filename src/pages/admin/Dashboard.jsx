@@ -10,7 +10,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    axios.get(`${API_BASE}/admin_stats.php`)
+    axios.get(`${API_BASE}/admin?endpoint=stats`)
       .then(res => {
         setStats(res.data.stats)
         setRecentOrders(res.data.recent_orders)

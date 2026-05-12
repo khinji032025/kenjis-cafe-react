@@ -38,7 +38,7 @@ export default function AdminOrders() {
   }
 
   function fetchOrderDetail(orderId) {
-    axios.get(`${API_BASE}/track_order.php?id=${orderId}`)
+    axios.get(`${API_BASE}/track_order?id=${orderId}`)
       .then(res => {
         if (res.data.success) {
           setViewOrder(res.data.order)

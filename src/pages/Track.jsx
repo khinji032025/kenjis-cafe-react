@@ -20,7 +20,7 @@ function ReviewSection({ orderId }) {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    axios.get(`${API_BASE}/check_review.php?order_id=${orderId}`)
+    axios.get(`${API_BASE}/reviews?endpoint=check&order_id=${orderId}`)
       .then(res => {
         if (res.data.exists) setExisting(res.data.review)
       })
@@ -31,7 +31,7 @@ function ReviewSection({ orderId }) {
     if (rating === 0) { alert('Please select a star rating!'); return }
     setSubmitting(true)
     try {
-      const res = await axios.post(`${API_BASE}/submit_review.php`, { order_id: orderId, rating, comment })
+      const res = await axios.post(`${API_BASE}/reviews?endpoint=submit`, { order_id: orderId, rating, comment })
       if (res.data.success) setSubmitted(true)
 else alert(res.data.message || 'Failed to submit review.')
     } catch (err) {
@@ -111,7 +111,7 @@ export default function Track() {
     setError('')
     setOrder(null)
     try {
-      const res = await axios.get(`${API_BASE}/track_order.php?id=${trackId}`)
+      const res = await axios.get(`${API_BASE}/track_order?id=${trackId}`)
       if (res.data.success) {
         setOrder(res.data.order)
         setItems(res.data.items)

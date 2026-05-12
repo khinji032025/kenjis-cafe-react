@@ -23,7 +23,7 @@ export default function Order() {
   const { cart, items, count, subtotal, discount, total, addToCart, removeFromCart, changeQty, clearCart } = useCart()
 
   useEffect(() => {
-    axios.get(`${API_BASE}/get_products.php`)
+    axios.get(`${API_BASE}/get_products`)
       .then(res => setProducts(res.data.filter(p => p.available == 1 && p.stock > 0)))
       .finally(() => setLoading(false))
   }, [])
@@ -42,7 +42,7 @@ export default function Order() {
 
     setSubmitting(true)
     try {
-      const res = await axios.post(`${API_BASE}/place_order.php`, {
+      const res = await axios.post(`${API_BASE}/place_order`, {
         customer_name: form.name,
         contact_number: form.contact,
         delivery_type: selectedDelivery,

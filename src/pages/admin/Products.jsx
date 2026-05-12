@@ -24,7 +24,7 @@ export default function AdminProducts() {
 
   function fetchProducts() {
     setLoading(true)
-    axios.get(`${API_BASE}/get_products.php`)
+    axios.get(`${API_BASE}/get_products`)
       .then(res => setProducts(res.data))
       .finally(() => setLoading(false))
   }

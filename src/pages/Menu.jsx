@@ -15,7 +15,7 @@ export default function Menu() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    axios.get(`${API_BASE}/get_products.php`)
+    axios.get(`${API_BASE}/get_products`)
       .then(res => setProducts(res.data))
       .catch(() => setProducts([]))
       .finally(() => setLoading(false))

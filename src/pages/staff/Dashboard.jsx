@@ -53,7 +53,7 @@ export default function StaffDashboard() {
   }, [])
 
   function fetchOrders() {
-    let url = `${API_BASE}/staff_orders.php`
+    let url = `${API_BASE}/staff?endpoint=orders`
     if (filterStatus === 'active') url += '?filter=active'
     else if (filterStatus !== 'all') url += `?filter=${filterStatus}`
     else url += '?filter=all'
@@ -61,11 +61,11 @@ export default function StaffDashboard() {
   }
 
   function fetchStats() {
-    axios.get(`${API_BASE}/staff_orders.php?stats=1`).then(res => setStats(res.data.stats || {}))
+    axios.get(`${API_BASE}/staff?endpoint=orders&stats=1`).then(res => setStats(res.data.stats || {}))
   }
 
   function fetchOrderDetail(orderId) {
-    axios.get(`${API_BASE}  /track_order.php?id=${orderId}`).then(res => {
+    axios.get(`${API_BASE}  /track_order?id=${orderId}`).then(res => {
       if (res.data.success) { setViewOrder(res.data.order); setViewItems(res.data.items) }
     })
   }
@@ -73,7 +73,7 @@ export default function StaffDashboard() {
   async function updateStatus(orderId, newStatus) {
     setUpdatingStatus(orderId)
     try {
-      await axios.post(`${API_BASE}/staff_update_status.php`, new URLSearchParams({ order_id: orderId, new_status: newStatus }))
+      await axios.post(`${API_BASE}/staff?endpoint=update_status`, new URLSearchParams({ order_id: orderId, new_status: newStatus }))
       showToast('✓ Status updated!', 'success')
       fetchOrders()
       fetchStats()
@@ -86,7 +86,7 @@ export default function StaffDashboard() {
   }
 
   function checkNewOrders() {
-    axios.get('/api/check_new_orders.php').then(res => {
+    axios.get('/api/staff?endpoint=check_new_orders').then(res => {
       if (res.data.new_orders?.length > 0) {
         let hasNew = false
         const updated = [...notifications]
