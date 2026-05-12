@@ -9,11 +9,11 @@ export default function AdminReviews() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    axios.get(`${API_BASE}/admin_reviews.php`)
-      .then(res => {
-        setReviews(res.data.reviews || [])
-        setStats(res.data.stats || { avg: 0, total: 0 })
-      })
+    axios.get(`${API_BASE}/admin?endpoint=reviews`)
+  .then(res => {
+    setReviews(res.data.reviews || [])
+    setStats({ avg: res.data.avg_rating || 0, total: res.data.total || 0 })
+  })
       .finally(() => setLoading(false))
   }, [])
 

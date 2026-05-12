@@ -101,7 +101,11 @@ export default async function handler(req, res) {
       const staff = await sql`SELECT id, name, contact, username, role, created_at FROM staff ORDER BY role, name`;
       return res.status(200).json({ staff });
     }
-
+  if (endpoint === 'reviews') {
+  const reviews = await sql`SELECT * FROM reviews ORDER BY created_at DESC`;
+  const [avg] = await sql`SELECT ROUND(AVG(rating),1) as avg, COUNT(*) as total FROM reviews`;
+  return res.status(200).json({ reviews, avg_rating: avg.avg || 0, total: avg.total || 0 });
+}
     res.status(400).json({ success: false, message: 'Invalid endpoint' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

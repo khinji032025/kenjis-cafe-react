@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AdminSidebar from '../../components/AdminSidebar'
 import axios from 'axios'
-import { API_BASE } from "../../config";
+import { API_BASE, IMG_BASE } from "../../config";
 
 const CATEGORIES = ['Hot Coffees', 'Iced Coffees', 'Specialty Coffees', 'Pastries']
 const CAT_ICONS = { 'Hot Coffees': '☕', 'Iced Coffees': '🧊', 'Specialty Coffees': '✨', 'Pastries': '🥐' }
