@@ -13,6 +13,7 @@
     "axios": "^1.16.0",
     "bcryptjs": "^3.0.3",
     "mysql2": "^3.22.3",
+    "postgres": "^3.4.9",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.15.0",

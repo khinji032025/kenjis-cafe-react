@@ -1,4 +1,4 @@
-import db from './db.js';
+import sql from './db.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,10 +11,13 @@ export default async function handler(req, res) {
   if (!order_id) return res.status(400).json({ success: false, message: 'No order ID provided' });
 
   try {
-    const [rows] = await db.query("SELECT o.order_id, o.customer_name, o.status, o.total_amount, o.delivery_type, o.created_at, GROUP_CONCAT(oi.product_name, ' x', oi.quantity SEPARATOR ', ') as items FROM orders o LEFT JOIN order_items oi ON o.order_id = oi.order_id WHERE o.order_id = ? GROUP BY o.id", [order_id.toUpperCase()]);
-    if (!rows.length) return res.status(404).json({ success: false, message: 'Order not found' });
+    const orders = await sql`SELECT * FROM orders WHERE order_id = ${order_id.toUpperCase()}`;
+    if (!orders.length) return res.status(404).json({ success: false, message: 'Order not found' });
 
-    const order = rows[0];
+    const items = await sql`SELECT product_name, quantity FROM order_items WHERE order_id = ${order_id.toUpperCase()}`;
+    const itemsList = items.map(i => `${i.product_name} x${i.quantity}`).join(', ');
+    const order = orders[0];
+
     res.status(200).json({
       success: true,
       order_id: order.order_id,
@@ -22,7 +25,7 @@ export default async function handler(req, res) {
       status: order.status,
       total_amount: parseFloat(order.total_amount).toFixed(2),
       delivery_type: order.delivery_type,
-      items: order.items,
+      items: itemsList,
       created_at: new Date(order.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })
     });
   } catch (err) {

@@ -1,12 +1,5 @@
-import mysql from 'mysql2/promise';
+import postgres from 'postgres';
 
-const db = mysql.createPool({
-  host: 'sql308.infinityfree.com',
-  user: 'if0_41889752',
-  password: 'kenjikenji2005',
-  database: 'if0_41889752_kenji_cafe',
-  waitForConnections: true,
-  connectionLimit: 10,
-});
+const sql = postgres('postgresql://neondb_owner:npg_Z7osBbRhf1tl@ep-billowing-darkness-aqbj3ur2-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require');
 
-export default db;
+export default sql;

@@ -1,4 +1,4 @@
-import db from './db.js';
+import sql from './db.js';
 import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   if (!username || !password) return res.status(400).json({ success: false, message: 'Please enter username and password' });
 
   try {
-    const [rows] = await db.query('SELECT * FROM staff WHERE username = ?', [username]);
+    const rows = await sql`SELECT * FROM staff WHERE username = ${username}`;
     if (rows.length === 0) return res.status(401).json({ success: false, message: 'Username not found' });
 
     const staff = rows[0];
