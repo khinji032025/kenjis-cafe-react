@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { API_BASE } from "../../config";
 
@@ -9,8 +9,8 @@ function getAvailableStatuses(currentStatus) {
     return [currentStatus]
   }
   const idx = ALL_STATUSES.indexOf(currentStatus)
-  const forward = ALL_STATUSES.slice(idx, ALL_STATUSES.length - 1) // exclude Cancelled from forward
-  return [...forward, 'Cancelled'] // Cancelled always available as last option
+  const forward = ALL_STATUSES.slice(idx, ALL_STATUSES.length - 1)
+  return [...forward, 'Cancelled']
 }
 const STATUS_STYLE = {
   Pending: { bg: '#FEF3E2', color: '#8B5E3C' },
@@ -53,19 +53,17 @@ export default function StaffDashboard() {
   }, [])
 
   function fetchOrders() {
-    let url = `${API_BASE}/staff?endpoint=orders`
-    if (filterStatus === 'active') url += '?filter=active'
-    else if (filterStatus !== 'all') url += `?filter=${filterStatus}`
-    else url += '?filter=all'
-    axios.get(url).then(res => setOrders(res.data.orders || []))
+    axios.get(`${API_BASE}/staff?endpoint=orders&filter=${filterStatus}`)
+      .then(res => setOrders(res.data.orders || []))
   }
 
   function fetchStats() {
-    axios.get(`${API_BASE}/staff?endpoint=orders&stats=1`).then(res => setStats(res.data.stats || {}))
+    axios.get(`${API_BASE}/staff?endpoint=orders&stats=1`)
+      .then(res => setStats(res.data.stats || {}))
   }
 
   function fetchOrderDetail(orderId) {
-    axios.get(`${API_BASE}  /track_order?id=${orderId}`).then(res => {
+    axios.get(`${API_BASE}/track_order?id=${orderId}`).then(res => {
       if (res.data.success) { setViewOrder(res.data.order); setViewItems(res.data.items) }
     })
   }
@@ -73,7 +71,7 @@ export default function StaffDashboard() {
   async function updateStatus(orderId, newStatus) {
     setUpdatingStatus(orderId)
     try {
-      await axios.post(`${API_BASE}/staff?endpoint=update_status`, new URLSearchParams({ order_id: orderId, new_status: newStatus }))
+      await axios.post(`${API_BASE}/staff?endpoint=update_status`, { order_id: orderId, new_status: newStatus })
       showToast('✓ Status updated!', 'success')
       fetchOrders()
       fetchStats()
@@ -86,7 +84,7 @@ export default function StaffDashboard() {
   }
 
   function checkNewOrders() {
-    axios.get('/api/staff?endpoint=check_new_orders').then(res => {
+    axios.get(`${API_BASE}/staff?endpoint=check_new_orders`).then(res => {
       if (res.data.new_orders?.length > 0) {
         let hasNew = false
         const updated = [...notifications]
@@ -129,7 +127,6 @@ export default function StaffDashboard() {
 
   return (
     <div style={{ display: 'flex', fontFamily: 'DM Sans, sans-serif', minHeight: '100vh', background: '#F4EDE4' }}>
-      {/* Sidebar */}
       <aside style={{ width: 240, minHeight: '100vh', background: '#2C1810', position: 'fixed', top: 0, left: 0, display: 'flex', flexDirection: 'column', zIndex: 100 }}>
         <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 42, height: 42, background: '#D4A853', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Playfair Display, serif', color: '#2C1810', fontSize: '1.15rem', fontWeight: 700 }}>K</div>
@@ -143,8 +140,6 @@ export default function StaffDashboard() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 8, color: '#D4A853', background: 'rgba(200,133,74,0.2)', borderLeft: '3px solid #D4A853', fontSize: '0.88rem', fontWeight: 500 }}>
             <span>📋</span> Manage Orders
           </div>
-          <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', padding: '12px 10px 6px' }}>Site</div>
-          <a href="http://sql308.infinityfree.com" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 8, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', fontSize: '0.88rem' }}>🌐 View Website</a>
         </nav>
         <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', marginBottom: 8 }}>
@@ -158,15 +153,12 @@ export default function StaffDashboard() {
         </div>
       </aside>
 
-      {/* Main */}
       <div style={{ marginLeft: 240, flex: 1 }}>
-        {/* Topbar */}
         <div style={{ background: 'white', borderBottom: '1px solid #E8D9C8', padding: '0 28px', height: 66, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 2px 8px rgba(44,24,16,0.08)' }}>
           <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.2rem', color: '#2C1810', fontWeight: 600 }}>
             {viewOrder ? 'Order Details' : 'Orders Management'}
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {/* Bell */}
             <div ref={notifRef} style={{ position: 'relative' }}>
               <button onClick={() => setNotifOpen(!notifOpen)} style={{ position: 'relative', background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', padding: 4, borderRadius: '50%' }}>
                 🔔
@@ -183,7 +175,7 @@ export default function StaffDashboard() {
                       <div style={{ textAlign: 'center', padding: 32, color: '#8C7B6E', fontSize: '0.85rem' }}>No new notifications</div>
                     ) : notifications.slice(0, 10).map((n, i) => (
                       <div key={i} onClick={() => { fetchOrderDetail(n.order_id); setViewOrder({}); setNotifOpen(false) }}
-                        style={{ padding: '12px 18px', borderBottom: '1px solid rgba(232,217,200,0.4)', cursor: 'pointer', transition: 'background 0.2s' }}
+                        style={{ padding: '12px 18px', borderBottom: '1px solid rgba(232,217,200,0.4)', cursor: 'pointer' }}
                         onMouseEnter={e => e.currentTarget.style.background = '#FAF6F0'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                         <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#2C1810' }}>🛒 New Order!</div>
@@ -200,7 +192,6 @@ export default function StaffDashboard() {
         </div>
 
         <div style={{ padding: 28 }}>
-          {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20, marginBottom: 24 }}>
             {[['⏳', 'Active Orders', stats.active || 0, 'rgba(229,62,62,0.1)'], ['📋', "Today's Orders", stats.today || 0, 'rgba(200,133,74,0.12)'], ['✅', 'Completed', stats.completed || 0, 'rgba(122,140,110,0.12)']].map(([icon, label, val, bg]) => (
               <div key={label} style={{ background: 'white', border: '1px solid #E8D9C8', borderRadius: 12, padding: 22, boxShadow: '0 2px 8px rgba(44,24,16,0.08)' }}>
@@ -212,7 +203,6 @@ export default function StaffDashboard() {
           </div>
 
           {viewOrder && viewOrder.order_id ? (
-            // Order Detail
             <div>
               <button onClick={() => setViewOrder(null)} style={{ padding: '7px 16px', borderRadius: 50, border: '1.5px solid #E8D9C8', background: 'transparent', color: '#2C1810', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Orders</button>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
@@ -224,21 +214,13 @@ export default function StaffDashboard() {
                     </div>
                     <span style={{ padding: '8px 18px', borderRadius: 50, fontSize: '0.9rem', fontWeight: 600, background: STATUS_STYLE[viewOrder.status]?.bg, color: STATUS_STYLE[viewOrder.status]?.color }}>{viewOrder.status}</span>
                   </div>
-
-                  {/* Update Status */}
                   <div style={{ marginBottom: 24, padding: 16, background: '#FAF6F0', borderRadius: 8 }}>
                     <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#4A3728', display: 'block', marginBottom: 8 }}>Update Order Status</label>
-                    <div style={{ display: 'flex', gap: 10 }}>
-                      <select
-  value={viewOrder.status}
-  onChange={e => updateStatus(viewOrder.order_id, e.target.value)}
-  disabled={viewOrder.status === 'Completed'}
-  style={{ flex: 1, padding: '10px 14px', border: '1.5px solid #E8D9C8', borderRadius: 8, fontFamily: 'DM Sans, sans-serif', fontSize: '0.88rem', outline: 'none', cursor: viewOrder.status === 'Completed' ? 'not-allowed' : 'pointer' }}>
-  {getAvailableStatuses(viewOrder.status).map(s => <option key={s} value={s}>{s}</option>)}
-</select>
-                    </div>
+                    <select value={viewOrder.status} onChange={e => updateStatus(viewOrder.order_id, e.target.value)} disabled={viewOrder.status === 'Completed'}
+                      style={{ flex: 1, padding: '10px 14px', border: '1.5px solid #E8D9C8', borderRadius: 8, fontFamily: 'DM Sans, sans-serif', fontSize: '0.88rem', outline: 'none', width: '100%', cursor: viewOrder.status === 'Completed' ? 'not-allowed' : 'pointer' }}>
+                      {getAvailableStatuses(viewOrder.status).map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
                   </div>
-
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                     {[['Customer', viewOrder.customer_name], ['Contact', viewOrder.contact_number], ['Delivery', viewOrder.delivery_type], ['Payment', viewOrder.payment_method?.toUpperCase()]].map(([label, val]) => (
                       <div key={label}>
@@ -250,7 +232,6 @@ export default function StaffDashboard() {
                     {viewOrder.special_request && <div style={{ gridColumn: '1/-1' }}><div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#8C7B6E', marginBottom: 3 }}>Special Request</div><div style={{ fontStyle: 'italic' }}>"{viewOrder.special_request}"</div></div>}
                   </div>
                 </div>
-
                 <div style={{ background: 'white', border: '1px solid #E8D9C8', borderRadius: 12, padding: 24, boxShadow: '0 2px 8px rgba(44,24,16,0.08)' }}>
                   <div style={{ fontWeight: 700, color: '#2C1810', marginBottom: 16, fontFamily: 'Playfair Display, serif' }}>Items Ordered</div>
                   {viewItems.map((item, i) => (
@@ -269,7 +250,6 @@ export default function StaffDashboard() {
               </div>
             </div>
           ) : (
-            // Orders List
             <>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
                 {[['active', '⏳ Active Orders'], ['all', '📋 All Orders'], ...ALL_STATUSES.map(s => [s, s])].map(([val, label]) => (
@@ -279,7 +259,6 @@ export default function StaffDashboard() {
                   </button>
                 ))}
               </div>
-
               <div style={{ background: 'white', border: '1px solid #E8D9C8', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(44,24,16,0.08)' }}>
                 <div style={{ padding: '18px 24px', borderBottom: '1px solid #E8D9C8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.05rem', color: '#2C1810', fontWeight: 600 }}>Orders ({orders.length})</span>
@@ -314,15 +293,11 @@ export default function StaffDashboard() {
                             {new Date(ord.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })}
                           </td>
                           <td style={tdStyle}>
-                            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                             <select
-  value={ord.status}
-  onChange={e => updateStatus(ord.order_id, e.target.value)}
-  disabled={updatingStatus === ord.order_id || ord.status === 'Completed'}
-  style={{ padding: '5px 10px', border: '1.5px solid #E8D9C8', borderRadius: 6, fontFamily: 'DM Sans, sans-serif', fontSize: '0.78rem', fontWeight: 600, cursor: ord.status === 'Completed' ? 'not-allowed' : 'pointer', outline: 'none', background: '#FAF6F0', width: 130 }}>
-  {getAvailableStatuses(ord.status).map(s => <option key={s} value={s}>{s}</option>)}
-</select>
-                            </div>
+                            <select value={ord.status} onChange={e => updateStatus(ord.order_id, e.target.value)}
+                              disabled={updatingStatus === ord.order_id || ord.status === 'Completed'}
+                              style={{ padding: '5px 10px', border: '1.5px solid #E8D9C8', borderRadius: 6, fontFamily: 'DM Sans, sans-serif', fontSize: '0.78rem', fontWeight: 600, cursor: ord.status === 'Completed' ? 'not-allowed' : 'pointer', outline: 'none', background: '#FAF6F0', width: 130 }}>
+                              {getAvailableStatuses(ord.status).map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
                           </td>
                           <td style={tdStyle}>
                             <button onClick={() => fetchOrderDetail(ord.order_id)} style={{ padding: '5px 12px', borderRadius: 50, border: '1.5px solid #E8D9C8', background: 'transparent', color: '#2C1810', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>View</button>
