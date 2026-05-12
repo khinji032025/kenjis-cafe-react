@@ -51,7 +51,7 @@ export default function AdminSidebar() {
           </div>
         ))}
         <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', padding: '12px 10px 6px' }}>Site</div>
-        <a href="http://localhost:5173" target="_blank" rel="noreferrer"
+        <a href="https://kenjis-cafe-react.vercel.app" target="_blank" rel="noreferrer"
           style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 8, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', fontSize: '0.88rem', fontWeight: 500 }}>
           🌐 View Website
         </a>
