@@ -49,7 +49,7 @@ export default function AdminProducts() {
     formData.append('action', editProduct ? 'edit' : 'add')
 
     try {
-      await axios.post(`${API_BASE}/admin_products.php`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      await axios.post(`${API_BASE}/admin?endpoint=products`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       showToast(editProduct ? 'Product updated!' : 'Product added!')
       setShowAddModal(false)
       setEditProduct(null)
@@ -63,7 +63,7 @@ export default function AdminProducts() {
   async function handleDelete(id) {
     if (!window.confirm('Delete this product?')) return
     try {
-      await axios.post(`${API_BASE}/admin_products.php`, new URLSearchParams({ action: 'delete', id }))
+      await axios.post(`${API_BASE}/admin?endpoint=products`, new URLSearchParams({ action: 'delete', id }))
       showToast('Product deleted.')
       fetchProducts()
     } catch {
@@ -74,7 +74,7 @@ export default function AdminProducts() {
   async function handleAddStock(e) {
     e.preventDefault()
     try {
-      await axios.post(`${API_BASE}/admin_products.php`, new URLSearchParams({ action: 'add_stock', id: stockProduct.id, add_stock: addStock }))
+      await axios.post(`${API_BASE}/admin?endpoint=products`, new URLSearchParams({ action: 'add_stock', id: stockProduct.id, add_stock: addStock }))
       showToast('Stock updated!')
       setShowStockModal(false)
       fetchProducts()

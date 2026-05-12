@@ -32,7 +32,7 @@ export default function AdminOrders() {
   function fetchOrders() {
     setLoading(true)
     const params = filterStatus !== 'all' ? `?status=${filterStatus}` : ''
-    axios.get(`${API_BASE}/admin_orders.php${params}`)
+    axios.get(`${API_BASE}/admin?endpoint=orders${params}`)
       .then(res => setOrders(res.data.orders || []))
       .finally(() => setLoading(false))
   }

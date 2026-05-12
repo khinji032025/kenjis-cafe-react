@@ -16,7 +16,7 @@ export default function AdminStaff() {
 
   function fetchStaff() {
     setLoading(true)
-    axios.get(`${API_BASE}/admin_staff.php`)
+    axios.get(`${API_BASE}/admin?endpoint=staff`)
       .then(res => setStaffList(res.data.staff || []))
       .finally(() => setLoading(false))
   }
@@ -37,7 +37,7 @@ export default function AdminStaff() {
     const data = new URLSearchParams({ ...form, action: editStaff ? 'edit' : 'add' })
     if (editStaff) data.append('id', editStaff.id)
     try {
-      const res = await axios.post(`${API_BASE}/admin_staff.php`, data)
+      const res = await axios.post(`${API_BASE}/admin?endpoint=staff`, data)
       if (res.data.success) {
         showToast(res.data.message)
         setShowModal(false)
@@ -55,7 +55,7 @@ export default function AdminStaff() {
   async function handleDelete(id) {
     if (!window.confirm('Remove this staff member?')) return
     try {
-      await axios.post(`${API_BASE}/admin_staff.php`, new URLSearchParams({ action: 'delete', id }))
+      await axios.post(`${API_BASE}/admin?endpoint=staff`, new URLSearchParams({ action: 'delete', id }))
       showToast('Staff deleted.')
       fetchStaff()
     } catch {

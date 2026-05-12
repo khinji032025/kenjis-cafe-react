@@ -10,7 +10,7 @@ export default function AdminReports() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    axios.get(`${API_BASE}/admin_reports.php`)
+    axios.get(`${API_BASE}/admin?endpoint=reports`)
       .then(res => setData(res.data))
       .finally(() => setLoading(false))
   }, [])
