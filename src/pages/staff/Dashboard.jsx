@@ -136,10 +136,12 @@ export default function StaffDashboard() {
           </div>
         </div>
         <nav style={{ padding: '16px 12px', flex: 1 }}>
-          <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', padding: '12px 10px 6px' }}>Orders</div>
+         <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', padding: '12px 10px 6px' }}>Orders</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 8, color: '#D4A853', background: 'rgba(200,133,74,0.2)', borderLeft: '3px solid #D4A853', fontSize: '0.88rem', fontWeight: 500 }}>
             <span>📋</span> Manage Orders
           </div>
+          <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', padding: '12px 10px 6px' }}>Site</div>
+          <a href="https://kenjis-cafe-react.vercel.app" target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 8, color: 'rgba(255,255,255,0.65)', textDecoration: 'none', fontSize: '0.88rem' }}>🌐 View Website</a>
         </nav>
         <div style={{ padding: '16px 12px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', marginBottom: 8 }}>
