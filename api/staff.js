@@ -28,18 +28,22 @@ export default async function handler(req, res) {
         const [today] = await sql`SELECT COUNT(*) as c FROM orders WHERE DATE(created_at) = CURRENT_DATE`;
         const [completed] = await sql`SELECT COUNT(*) as c FROM orders WHERE status = 'Completed'`;
         const [pending] = await sql`SELECT COUNT(*) as c FROM orders WHERE status = 'Pending'`;
-        return res.status(200).json({ stats: { active: active.c, today: today.c, completed: completed.c, pending: pending.c } });
+        return res.status(200).json({ stats: { active: Number(active.c), today: Number(today.c), completed: Number(completed.c), pending: Number(pending.c) } });
       }
 
       const filter = req.query.filter || 'active';
       let orders;
+
       if (filter === 'active') {
-        orders = await sql`SELECT o.*, (SELECT SUM(quantity) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o WHERE o.status NOT IN ('Completed','Cancelled') ORDER BY o.created_at DESC`;
+        orders = await sql`SELECT o.*, (SELECT COALESCE(SUM(quantity),0) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o WHERE o.status NOT IN ('Completed','Cancelled') ORDER BY o.created_at DESC`;
+      } else if (filter === 'all') {
+        orders = await sql`SELECT o.*, (SELECT COALESCE(SUM(quantity),0) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o ORDER BY o.created_at DESC`;
       } else if (all_statuses.includes(filter)) {
-        orders = await sql`SELECT o.*, (SELECT SUM(quantity) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o WHERE o.status = ${filter} ORDER BY o.created_at DESC`;
+        orders = await sql`SELECT o.*, (SELECT COALESCE(SUM(quantity),0) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o WHERE o.status = ${filter} ORDER BY o.created_at DESC`;
       } else {
-        orders = await sql`SELECT o.*, (SELECT SUM(quantity) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o ORDER BY o.created_at DESC`;
+        orders = await sql`SELECT o.*, (SELECT COALESCE(SUM(quantity),0) FROM order_items WHERE order_id = o.order_id) as item_count FROM orders o ORDER BY o.created_at DESC`;
       }
+
       return res.status(200).json({ orders });
     }
 
