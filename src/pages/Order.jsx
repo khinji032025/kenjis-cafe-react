@@ -79,7 +79,7 @@ export default function Order() {
         </div>
 
         <div className="max-w-6xl mx-auto px-8 py-12">
-          <div className="grid gap-8" style={{ gridTemplateColumns: '1fr 380px' }}>
+          <div className="grid gap-8 grid-cols-1 lg:grid-cols-[1fr_380px]">
 
             {/* Products */}
             <div>
